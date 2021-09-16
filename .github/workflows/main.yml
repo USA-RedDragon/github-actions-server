@@ -23,15 +23,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Install Codecov CLI
-        run: npm i -g codecov
       - name: Install Locked Dependencies
         run: npm ci
       - name: Test
         run: npm test
       - name: Lint
         run: npm run lint
-      - name: Report Coverage to Codecov
+      - name: Generate Coverage Report
         run: npm run coverage
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/
+          fail_ci_if_error: true
